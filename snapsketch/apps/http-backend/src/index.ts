@@ -1,11 +1,29 @@
-import express from "express";
-const app = express();
+import express, { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "./config";
+import { middleware } from "./middleware";
 
+const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", () => {
-  console.log("working fine");
+app.post("/signup", (req: Request, res: Response) => {
+  return res.json({
+    userId: "123",
+  });
+});
+
+app.post("/signin", (req: Request, res: Response) => {
+  const token = jwt.sign("123", JWT_SECRET);
+  return res.json({
+    token,
+  });
+});
+
+app.post("/createRoom", middleware, (req: Request, res: Response) => {
+  return res.json({
+    roomID: "123",
+  });
 });
 
 app.listen(3000, () => {
