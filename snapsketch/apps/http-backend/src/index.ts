@@ -1,13 +1,21 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "./config";
+import { JWT_SECRET } from "@repo/backend-common/config";
 import { middleware } from "./middleware";
+import { signupSchema } from "@repo/common/types";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.post("/signup", (req: Request, res: Response) => {
+  const parsedBody = signupSchema.safeParse(req.body);
+  if (!parsedBody.success) {
+    res.json({
+      message: "Not valid input",
+    });
+    return;
+  }
   return res.json({
     userId: "123",
   });
