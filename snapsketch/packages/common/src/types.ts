@@ -7,11 +7,11 @@ export const signupSchema = z.object({
 });
 
 export const signinSchema = z.object({
-  name: z.string().min(3).max(20),
   email: z.string(),
   password: z.string(),
 });
 
 export const CreateRoomSchema = z.object({
   roomname: z.string().min(3).max(20),
+  slug:z.string()
 });

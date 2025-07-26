@@ -25,6 +25,7 @@ model User {
 
 model Room {
   id               String     @id @default(uuid())
+  roomname         String
   slug             String
   createdAt        DateTime   @default(now())
   creator          User?      @relation("creator", fields: [creatorId], references: [id])
