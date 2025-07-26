@@ -4,8 +4,13 @@
     "plugins": [
       {
         "name": "next"
-      }
-    ]
+      },
+    ],
+     "paths": {
+            "@repo/backend-common": [
+                "../../packages/backend-common/src"
+            ]
+        }
   },
   "include": [
     "**/*.ts",
