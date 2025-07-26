@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-//import  {JWT_SECRET}  from "@repo/backend-common/config";
+import  {JWT_SECRET}  from "@repo/backend-common/config";
 import { middleware } from "./middleware.js";
 import { signupSchema } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
@@ -73,7 +73,7 @@ app.post("/signup", async (req: Request, res: Response) => {
 });
 
 app.post("/signin", (req: Request, res: Response) => {
-  const token = jwt.sign("123", "JWT_SECRET");
+  const token = jwt.sign("123", JWT_SECRET);
   return res.json({
     token,
   });
