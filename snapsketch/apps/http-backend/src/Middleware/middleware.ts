@@ -14,8 +14,7 @@ export function middleware(req: Request, res: Response, next: NextFunction) {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    // You can attach decoded info to request object if needed:
-    // req.user = decoded;
+
     if (decoded && decoded.id) {
       req.userid = decoded.id;
     }

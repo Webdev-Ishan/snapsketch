@@ -13,64 +13,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use("/api/auth",authRouter);
-
-app.post("/signin", async (req: Request, res: Response) => {
-  const parsedBody = signinSchema.safeParse(req.body);
-  if (!parsedBody.success) {
-    res.status(400).json({
-      success: false,
-      message: "Not valid input",
-    });
-    return;
-  }
-
-  const { email, password } = parsedBody.data;
-
-  try {
-    const exist = await prisma.user.findFirst({
-      where: {
-        email,
-      },
-    });
-
-    if (!exist) {
-      res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-      return;
-    }
-
-    const decrypted = await bcrypt.compare(password, exist.password);
-
-    if (!decrypted) {
-      res.status(409).json({
-        success: false,
-        message: "Email or password is wrong",
-      });
-      return;
-    }
-
-    let token = jwt.sign({ id: exist.id.toString() }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
-    res.status(200).json({
-      success: true,
-      message: "Logged in successfull",
-      token,
-    });
-    return;
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        success: false,
-        message: error.message,
-      });
-    }
-  }
-});
+app.use("/api/auth", authRouter);
 
 app.post("/createRoom", middleware, async (req: Request, res: Response) => {
   const parsedBody = CreateRoomSchema.safeParse(req.body);

@@ -1,4 +1,4 @@
-import { signupSchema } from "@repo/common/types";
+import { signinSchema, signupSchema } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import bcrypt, { genSalt } from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -57,6 +57,104 @@ export const signUpcontroller = async (req: Request, res: Response) => {
       success: true,
       message: "Registration Successfull!!",
       token,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const signinController = async (req: Request, res: Response) => {
+  const parsedBody = signinSchema.safeParse(req.body);
+  if (!parsedBody.success) {
+    res.status(400).json({
+      success: false,
+      message: "Not valid input",
+    });
+    return;
+  }
+
+  const { email, password } = parsedBody.data;
+
+  try {
+    const exist = await prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!exist) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    const decrypted = await bcrypt.compare(password, exist.password);
+
+    if (!decrypted) {
+      res.status(409).json({
+        success: false,
+        message: "Email or password is wrong",
+      });
+      return;
+    }
+
+    let token = jwt.sign({ id: exist.id.toString() }, JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfull",
+      token,
+    });
+    return;
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const ProfileController = async (req: Request, res: Response) => {
+  const userid = req.userid;
+  if (!userid) {
+    return res.status(400).json({
+      success: false,
+      message: "Id not found",
+    });
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userid,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    return res.status(400).json({
+      success: true,
+      userinfo: {
+        username: user.name,
+        email: user.email,
+        id: user.id,
+        dp: user.profilepic,
+      },
     });
   } catch (error) {
     if (error instanceof Error) {
