@@ -143,7 +143,6 @@ app.post("/createRoom", middleware, async (req: Request, res: Response) => {
     res.status(400).json({
       success: false,
       message: parsedBody.error,
-     
     });
     return;
   }
@@ -173,8 +172,7 @@ app.post("/createRoom", middleware, async (req: Request, res: Response) => {
       },
     });
 
-
- if (existroom) {
+    if (existroom) {
       res.status(404).json({
         success: false,
         message: "Room already exist",
@@ -193,6 +191,57 @@ app.post("/createRoom", middleware, async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       newRoom,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+});
+
+app.get("/messages/:roomID", async (req: Request, res: Response) => {
+  const roomID = req.params.roomID;
+
+  if (!roomID) {
+    return res.status(400).json({
+      success: false,
+      message: "roomID not found",
+    });
+  }
+  try {
+    const room = await prisma.room.findUnique({
+      where: {
+        id: roomID,
+      },
+    });
+
+    if (!room) {
+      return res.status(404).json({
+        success: false,
+        message: "room not exist",
+      });
+    }
+
+    const messages = await prisma.messages.findMany({
+      where: {
+        roomId: roomID,
+      },
+      take: 50,
+    });
+
+    if (!messages) {
+      return res.status(409).json({
+        success: false,
+        message: "Something went wrong",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      messages,
     });
   } catch (error) {
     if (error instanceof Error) {
