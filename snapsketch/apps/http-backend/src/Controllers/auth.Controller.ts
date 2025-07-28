@@ -1,9 +1,13 @@
 import { signinSchema, signupSchema } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
-import bcrypt, { genSalt } from "bcrypt";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@repo/backend-common/config";
+import { JWT_SECRET, RESEND_API_KEY } from "@repo/backend-common/config";
 import { Request, Response } from "express";
+import { Resend } from "resend";
+import { v2 as cloudinary } from "cloudinary";
+
+const resend = new Resend(RESEND_API_KEY?.toString());
 
 export const signUpcontroller = async (req: Request, res: Response) => {
   const parsedBody = signupSchema.safeParse(req.body);
@@ -34,11 +38,16 @@ export const signUpcontroller = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const imageupload = await cloudinary.uploader.upload(req.body.profilepic, {
+      resource_type: "image",
+    });
+
     const newUser = await prisma.user.create({
       data: {
         name: name,
         email: email,
         password: hashedPassword,
+        profilepic: imageupload.url,
       },
     });
 
@@ -51,6 +60,13 @@ export const signUpcontroller = async (req: Request, res: Response) => {
 
     let token = jwt.sign({ id: newUser.id.toString() }, JWT_SECRET, {
       expiresIn: "1d",
+    });
+
+    await resend.emails.send({
+      from: "SnapSketch <onboarding@resend.dev>",
+      to: newUser.email,
+      subject: "<strong>Registartion successfull!!</strong>",
+      text: "Welcome to the Snapsketch tour journey in the limitless world of art starts today!!",
     });
 
     return res.status(200).json({
