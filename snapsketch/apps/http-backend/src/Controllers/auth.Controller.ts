@@ -38,16 +38,20 @@ export const signUpcontroller = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const imageupload = await cloudinary.uploader.upload(req.body.profilepic, {
-      resource_type: "image",
-    });
+    let imageupload;
+
+    if (req.file && req.file.path) {
+      imageupload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
+    }
 
     const newUser = await prisma.user.create({
       data: {
         name: name,
         email: email,
         password: hashedPassword,
-        profilepic: imageupload.url,
+        profilepic: imageupload?.secure_url,
       },
     });
 
@@ -65,8 +69,9 @@ export const signUpcontroller = async (req: Request, res: Response) => {
     await resend.emails.send({
       from: "SnapSketch <onboarding@resend.dev>",
       to: newUser.email,
-      subject: "<strong>Registartion successfull!!</strong>",
-      text: "Welcome to the Snapsketch tour journey in the limitless world of art starts today!!",
+      subject: "Registration successful!!",
+      text: "Welcome to the SnapSketch tour. Your journey in the limitless world of art starts today!!",
+      html: "<strong>Welcome to the SnapSketch tour. Your journey in the limitless world of art starts today!!</strong>",
     });
 
     return res.status(200).json({

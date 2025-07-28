@@ -13,7 +13,7 @@ export default function Navbar() {
           <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-lg flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-white" />
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+          <span onClick={()=>router.push("/")} className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
             SnapSketch
           </span>
         </div>
@@ -27,10 +27,10 @@ export default function Navbar() {
             Features
           </a>
           <a
-            
+            onClick={() => router.push("/Profile")}
             className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent transition-colors hover:text-pink-400"
           >
-            Demo
+            Profile
           </a>
           <a
             onClick={() => router.push("/Pricing")}

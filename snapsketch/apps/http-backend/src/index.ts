@@ -8,11 +8,17 @@ import { CreateRoomSchema } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import bcrypt, { genSalt } from "bcrypt";
 import authRouter from "./Routes/auth.Routes.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 app.use("/api/auth", authRouter);
 
 app.post("/createRoom", middleware, async (req: Request, res: Response) => {
