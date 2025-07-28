@@ -1,13 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  User,
-  Mail,
-  Lock,
-  ArrowRight,
-  Sparkles,
-  CheckCircle,
-} from "lucide-react";
+import { Mail, Lock, ArrowRight, Sparkles, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -20,45 +13,40 @@ type backendresponse = {
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function SignupPage() {
+export default function SigninPage() {
   const router = useRouter();
-  const token = localStorage.getItem("token");
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       router.push("/Profile");
     }
-  }, [token, router]);
+  }, [router]);
 
-  const [username, setusername] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [DP, setDP] = useState<File | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const formdata = new FormData();
-    formdata.append("name", username);
+
     formdata.append("email", email);
     formdata.append("password", password);
-    if (DP) {
-      formdata.append("profilepic", DP);
-    }
 
     try {
       const response = await axios.post<backendresponse>(
-        `${URL}/api/auth/signup`,
+        `${URL}/api/auth/signin`,
         formdata,
         {
           headers: {
-            "Content-Type": "multipart/form-data", // Explicitly set Content-Type
+            "Content-Type": "application/json", // Explicitly set Content-Type
           },
         }
       );
 
       if (response.data && response.data.success) {
         localStorage.setItem("token", response.data.token);
-        toast.success("Registration Successfull!");
+        toast.success("Login Successfull!");
         router.push("/");
       }
     } catch (error) {
@@ -80,10 +68,8 @@ export default function SignupPage() {
         }
       }
     } finally {
-      setusername("");
       setemail("");
       setpassword("");
-      setDP(null);
     }
   };
 
@@ -161,38 +147,13 @@ export default function SignupPage() {
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                Create Account
+                Login Please
               </h2>
               <p className="text-gray-400">Start your creative journey today</p>
             </div>
 
             {/* Signup Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Username Field */}
-              <div>
-                <label
-                  htmlFor="username"
-                  className="block text-sm font-medium text-gray-300 mb-2"
-                >
-                  Username
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={username}
-                    onChange={(e) => setusername(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 backdrop-blur-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Enter your username"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Email Field */}
               <div>
                 <label
@@ -243,36 +204,6 @@ export default function SignupPage() {
                 </div>
               </div>
 
-              {/* Profile pic */}
-
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-300 mb-2"
-                >
-                  ProfliePic
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input
-                    type="file"
-                    id="DP"
-                    accept="image/*"
-                    name="profilepic" // This must match the backend field name
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files[0]) {
-                        setDP(e.target.files[0]);
-                      }
-                    }}
-                    className="w-full pl-10 pr-12 py-3 backdrop-blur-sm bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300"
-                    placeholder="Create a strong password"
-                    required
-                  />
-                </div>
-              </div>
-
               {/* Terms and Privacy */}
               <div className="flex items-start space-x-3">
                 <input
@@ -304,7 +235,7 @@ export default function SignupPage() {
                 type="submit"
                 className="group w-full bg-gradient-to-r from-purple-600 to-cyan-600 px-6 py-4 rounded-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                <span>Create Account</span>
+                <span>Login</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
             </form>
@@ -312,12 +243,12 @@ export default function SignupPage() {
             {/* Login Link */}
             <div className="mt-6 text-center">
               <p className="text-gray-400">
-                Already have an account?{" "}
+                Create an account{" "}
                 <Link
-                  href={"/Signin"}
+                  href={"/Signup"}
                   className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
                 >
-                  Sign in
+                  Sign Up
                 </Link>
               </p>
             </div>
