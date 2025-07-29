@@ -66,3 +66,29 @@ export const createReviewController = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const allReviewController = async (req: Request, res: Response) => {
+  try {
+    const allreview = await prisma.reviews.findMany({});
+
+    if (!allreview) {
+      res.status(404).json({
+        success: false,
+        message: "Room already exist",
+      });
+      return;
+    }
+
+    return res.status(200).json({
+      success: true,
+      allreview,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};

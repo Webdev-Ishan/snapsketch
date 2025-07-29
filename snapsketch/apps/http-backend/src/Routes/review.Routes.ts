@@ -4,9 +4,14 @@ import * as reviewContrller from "../Controllers/review.Controller.js";
 const reviewRouter: Router = express.Router();
 
 reviewRouter.post(
-  "/createRoom",
+  "/createReview",
   middleware,
   reviewContrller.createReviewController
+);
+
+reviewRouter.get(
+  "/allReviews",
+  reviewContrller.allReviewController
 );
 
 export default reviewRouter;
