@@ -1,0 +1,68 @@
+import { CreateEnquirySchema } from "@repo/common/types";
+import { prisma } from "@repo/db/client";
+import { Request, Response } from "express";
+
+export const createEnquiryController = async (req: Request, res: Response) => {
+  const parsedBody = CreateEnquirySchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    res.status(400).json({
+      success: false,
+      message: parsedBody.error,
+    });
+    return;
+  }
+
+  const { Title, message } = parsedBody.data;
+  const userid = req.userid;
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userid,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    const existreview = await prisma.enquiry.findFirst({
+      where: {
+        senderId: userid,
+      },
+    });
+
+    if (existreview) {
+      res.status(404).json({
+        success: false,
+        message: "Room already exist",
+      });
+      return;
+    }
+
+    const newRoom = await prisma.enquiry.create({
+      data: {
+        Title,
+        message,
+        senderId: userid,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Review Successfull",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
