@@ -14,13 +14,15 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  name         String
-  email        String     @unique
-  password     String
-  profilepic   String?
-  roomsCreated Room[]     @relation("creator")
-  messagesSent Messages[] @relation("sender")
+  id               String     @id @default(uuid())
+  name             String
+  email            String     @unique
+  password         String
+  profilepic       String?
+  roomsCreated     Room[]     @relation("creator")
+  messagesSent     Messages[] @relation("sender")
+  reviewsGiven     Reviews[]  @relation("reviewsdoneby")
+  enquiryquestions Enquiry[]  @relation("askedby")
 }
 
 model Room {
@@ -40,5 +42,21 @@ model Messages {
   Room     Room?    @relation("room", fields: [roomId], references: [id])
   roomId   String
   sender   User?    @relation("sender", fields: [senderId], references: [id])
+  senderId String
+}
+
+model Reviews {
+  id       Int    @id @default(autoincrement())
+  Title    String
+  message  String
+  sender   User?  @relation("reviewsdoneby", fields: [senderId], references: [id])
+  senderId String
+}
+
+model Enquiry {
+  id       Int    @id @default(autoincrement())
+  Title    String
+  message  String
+  sender   User?  @relation("askedby", fields: [senderId], references: [id])
   senderId String
 }
