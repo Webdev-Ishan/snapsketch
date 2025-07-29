@@ -69,15 +69,19 @@ export const createReviewController = async (req: Request, res: Response) => {
 
 export const allReviewController = async (req: Request, res: Response) => {
   try {
-    const allreview = await prisma.reviews.findMany({});
+    const allreview = await prisma.reviews.findMany({
+      include: {
+        sender: {
+          select: {
+            name: true,
+            email: true,
+            profilepic: true,
+          },
+        },
+      },
+    });
 
-    if (!allreview) {
-      res.status(404).json({
-        success: false,
-        message: "Room already exist",
-      });
-      return;
-    }
+    
 
     return res.status(200).json({
       success: true,

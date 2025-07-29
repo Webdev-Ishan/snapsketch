@@ -41,6 +41,12 @@ export default function Navbar() {
               Pricing
             </a>
             <a
+              onClick={() => router.push("/Reviews")}
+              className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent transition-colors hover:text-pink-400"
+            >
+              Reviews
+            </a>
+            <a
               onClick={() => router.push("/About")}
               className="bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent transition-colors hover:text-pink-400"
             >

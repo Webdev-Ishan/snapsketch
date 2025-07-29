@@ -1,129 +1,51 @@
-import React, { useState } from "react";
-import {
-  Star,
-  Users,
-  Award,
-  Heart,
-  CheckCircle,
-  ArrowRight,
-} from "lucide-react";
+"use client";
+import React, { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
-export default function ReviewsPage() {
-  const [selectedFilter, setSelectedFilter] = useState("all");
-
-  const stats = [
-    {
-      number: "4.9/5",
-      label: "Average Rating",
-      icon: <Star className="w-6 h-6" />,
-    },
-    {
-      number: "12,000+",
-      label: "Happy Customers",
-      icon: <Users className="w-6 h-6" />,
-    },
-    {
-      number: "98%",
-      label: "Would Recommend",
-      icon: <Heart className="w-6 h-6" />,
-    },
-    { number: "50+", label: "Countries", icon: <Award className="w-6 h-6" /> },
-  ];
-
-  const reviews = [
-    {
-      id: 1,
-      name: "Alex Thompson",
-      role: "Product Manager",
-      company: "StartupXYZ",
-      image:
-        "https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 5,
-      category: "team",
-      text: "SnapSketch has transformed our product planning sessions. The infinite canvas lets us map out complex user journeys, and the real-time collaboration means everyone stays in sync.",
-      date: "2 weeks ago",
-      verified: true,
-    },
-    {
-      id: 2,
-      name: "Lisa Park",
-      role: "UX Designer",
-      company: "DesignCorp",
-      image:
-        "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 5,
-      category: "freelancer",
-      text: "The drawing tools are incredibly responsive and the export options are perfect for client presentations. Love the professional templates!",
-      date: "1 month ago",
-      verified: true,
-    },
-    {
-      id: 3,
-      name: "David Kim",
-      role: "Engineering Manager",
-      company: "TechGiant Corp",
-      image:
-        "https://images.pexels.com/photos/3785079/pexels-photo-3785079.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 5,
-      category: "enterprise",
-      text: "The enterprise security features give us peace of mind, and the SSO integration made rollout seamless across our 500+ person team.",
-      date: "3 weeks ago",
-      verified: true,
-    },
-    {
-      id: 4,
-      name: "Maria Gonzalez",
-      role: "Art Teacher",
-      company: "Lincoln High School",
-      image:
-        "https://images.pexels.com/photos/3756681/pexels-photo-3756681.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 5,
-      category: "education",
-      text: "My students love using SnapSketch for their digital art projects. The interface is intuitive and the collaborative features help them learn from each other.",
-      date: "2 months ago",
-      verified: true,
-    },
-    {
-      id: 5,
-      name: "James Wilson",
-      role: "Creative Director",
-      company: "BrandStudio",
-      image:
-        "https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 4,
-      category: "team",
-      text: "Great tool for brainstorming and ideation. The version history feature has saved us multiple times when we needed to revert changes.",
-      date: "1 week ago",
-      verified: true,
-    },
-    {
-      id: 6,
-      name: "Rachel Adams",
-      role: "Graphic Designer",
-      company: "Freelance",
-      image:
-        "https://images.pexels.com/photos/3756679/pexels-photo-3756679.jpeg?auto=compress&cs=tinysrgb&w=300",
-      rating: 5,
-      category: "freelancer",
-      text: "The affordable pricing and professional features make this perfect for freelancers. Client collaboration has never been easier!",
-      date: "3 weeks ago",
-      verified: true,
-    },
-  ];
-
-  const filteredReviews =
-    selectedFilter === "all"
-      ? reviews
-      : reviews.filter((review) => review.category === selectedFilter);
-
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < rating ? "text-yellow-400 fill-current" : "text-gray-600"}`}
-      />
-    ));
+type review = {
+  id: string;
+  Title: string;
+  message: string;
+  sender: {
+    name: string;
+    email: string;
+    profilepic: string;
+    createdAT: string;
   };
+};
+
+type backendresponse = {
+  success: boolean;
+  allreview: review[];
+};
+
+const URL = process.env.NEXT_PUBLIC_API_URL;
+export default function ReviewsPage() {
+  const [reviews, setreviews] = useState<review[]>();
+
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get<backendresponse>(
+        `${URL}/api/review/allReviews`
+      );
+
+      if (response.data && response.data.success) {
+        setreviews(response.data.allreview);
+        console.log(response.data.allreview);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Unable to fetch data");
+        console.log(error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -149,46 +71,41 @@ export default function ReviewsPage() {
 
           {/* Reviews Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredReviews.map((review) => (
-              <div
-                key={review.id}
-                className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 transform hover:scale-105"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center space-x-3">
-                    <img
-                      src={review.image}
-                      alt={review.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-purple-500/50"
-                    />
-                    <div>
-                      <div className="flex items-center space-x-2">
-                        <h4 className="font-semibold text-white">
-                          {review.name}
-                        </h4>
-                        {review.verified && (
-                          <CheckCircle className="w-4 h-4 text-green-400" />
-                        )}
+            {reviews &&
+              reviews.map((review) => (
+                <div
+                  key={review.id}
+                  className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 transform hover:scale-105"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <img
+                        src={review.sender.profilepic}
+                        alt={review.sender.name}
+                        className="w-12 h-12 rounded-full o border-2 border-purple-500/50"
+                      />
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <h4 className="font-semibold text-white">
+                            {review.sender.name}
+                          </h4>
+                        </div>
+                        <p className="text-purple-400 text-sm m-2">
+                          {review.sender.email}
+                        </p>
                       </div>
-                      <p className="text-purple-400 text-sm">{review.role}</p>
-                      <p className="text-gray-400 text-xs">{review.company}</p>
                     </div>
                   </div>
-                  <div className="flex">{renderStars(review.rating)}</div>
-                </div>
 
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  {review.text}
-                </p>
+                  <p className="text-purple-400 leading-relaxed mb-4">
+                    {review.Title}
+                  </p>
 
-                <div className="flex items-center justify-between text-sm text-gray-400">
-                  <span>{review.date}</span>
-                  <span className="capitalize bg-purple-500/20 px-2 py-1 rounded-full text-purple-300">
-                    {review.category}
-                  </span>
+                  <div className="flex items-center justify-between text-md text-white">
+                    <span>{review.message}</span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </section>
