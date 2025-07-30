@@ -183,7 +183,9 @@ export default function ProfilePage() {
                   <div className="flex space-x-3 mt-4 md:mt-0">
                     <button className="backdrop-blur-sm bg-white/10 border border-white/20 px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
                       <Edit3 className="w-4 h-4" />
-                      <span>Edit Profile</span>
+                      <span onClick={() => router.push("/EditProfile")}>
+                        Edit Profile
+                      </span>
                     </button>
                     <button
                       onClick={handleLogout}
