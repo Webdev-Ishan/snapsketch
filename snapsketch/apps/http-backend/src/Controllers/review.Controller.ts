@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 export const createReviewController = async (req: Request, res: Response) => {
   const parsedBody = CreateReviewSchema.safeParse(req.body);
-
+ console.log(req.body);
   if (!parsedBody.success) {
     res.status(400).json({
       success: false,
@@ -31,21 +31,7 @@ export const createReviewController = async (req: Request, res: Response) => {
       return;
     }
 
-    const existreview = await prisma.reviews.findFirst({
-      where: {
-        senderId: userid,
-      },
-    });
-
-    if (existreview) {
-      res.status(404).json({
-        success: false,
-        message: "Room already exist",
-      });
-      return;
-    }
-
-    const newRoom = await prisma.reviews.create({
+    await prisma.reviews.create({
       data: {
         Title,
         message,
@@ -80,8 +66,6 @@ export const allReviewController = async (req: Request, res: Response) => {
         },
       },
     });
-
-    
 
     return res.status(200).json({
       success: true,

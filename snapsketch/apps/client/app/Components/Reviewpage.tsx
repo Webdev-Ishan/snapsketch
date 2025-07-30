@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 type review = {
   id: string;
@@ -24,7 +25,7 @@ type backendresponse = {
 const URL = process.env.NEXT_PUBLIC_API_URL;
 export default function ReviewsPage() {
   const [reviews, setreviews] = useState<review[]>();
-
+  const router = useRouter();
   const fetchReviews = async () => {
     try {
       const response = await axios.get<backendresponse>(
@@ -121,7 +122,10 @@ export default function ReviewsPage() {
               Ready to experience what thousands of creators are raving about?
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="group bg-gradient-to-r from-purple-600 to-cyan-600 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
+              <button
+                onClick={() => router.push("/GiveReview")}
+                className="group bg-gradient-to-r from-purple-600 to-cyan-600 px-8 py-4 rounded-xl text-lg font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2"
+              >
                 <span>Give Review</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>

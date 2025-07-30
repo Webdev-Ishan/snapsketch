@@ -18,7 +18,7 @@ export const CreateRoomSchema = z.object({
 
 export const CreateReviewSchema = z.object({
   Title: z.string().min(3).max(50),
-  message: z.string().max(300),
+  message: z.string().min(20).max(300),
 });
 
 export const CreateEnquirySchema = z.object({

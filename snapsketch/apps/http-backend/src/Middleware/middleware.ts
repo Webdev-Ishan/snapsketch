@@ -20,6 +20,8 @@ export function middleware(req: Request, res: Response, next: NextFunction) {
     }
     next();
   } catch (err) {
-    return res.status(403).json({ message: "Unauthorized: Invalid token" });
+    return res
+      .status(403)
+      .json({ message: "Unauthorized: Invalid token", token: token });
   }
 }
