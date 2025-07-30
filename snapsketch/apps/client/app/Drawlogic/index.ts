@@ -1,19 +1,19 @@
 type Shapes =
   | {
-      type: "rectangle";
+      type: "Rectangle";
       width: number;
       height: number;
       x: number;
       y: number;
     }
   | {
-      type: "circle";
+      type: "Circle";
       centerX: number;
       centerY: number;
       radius: number;
     };
 
-export function initDraw(canvas: HTMLCanvasElement) {
+export function initDraw(canvas: HTMLCanvasElement, shape: string) {
   const allShapes: Shapes[] = [];
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -24,6 +24,7 @@ export function initDraw(canvas: HTMLCanvasElement) {
 
   canvas.addEventListener("mousedown", (e) => {
     clicked = true;
+
     const rect = canvas.getBoundingClientRect();
     startX = e.clientX - rect.left;
     startY = e.clientY - rect.top;
@@ -40,14 +41,22 @@ export function initDraw(canvas: HTMLCanvasElement) {
     const width = endX - startX;
     const height = endY - startY;
 
-    allShapes.push({
-      type: "rectangle",
-      x: startX,
-      y: startY,
-      width,
-      height,
-    });
-
+    if (shape === "Rectangle") {
+      allShapes.push({
+        type: "Rectangle",
+        x: startX,
+        y: startY,
+        width,
+        height,
+      });
+    } else {
+      allShapes.push({
+        type: "Circle",
+        centerX: startX,
+        centerY: startY,
+        radius:  endX,
+      });
+    }
     drawAllShapes(ctx, canvas, allShapes);
   });
 
@@ -64,8 +73,14 @@ export function initDraw(canvas: HTMLCanvasElement) {
     drawAllShapes(ctx, canvas, allShapes);
 
     // Draw current rectangle
-    ctx.strokeStyle = "blue";
-    ctx.strokeRect(startX, startY, width, height);
+    if (shape === "Rectangle") {
+      ctx.strokeStyle = "blue";
+      ctx.strokeRect(startX, startY, width, height);
+    } else {
+      ctx.strokeStyle = "blue";
+      ctx.arc(startX, startY,currX, 0, 2 * Math.PI);
+      ctx.stroke();
+    }
   });
 }
 
@@ -80,9 +95,9 @@ function drawAllShapes(
     ctx.beginPath();
     ctx.strokeStyle = "blue";
 
-    if (shape.type === "rectangle") {
+    if (shape.type === "Rectangle") {
       ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-    } else if (shape.type === "circle") {
+    } else if (shape.type === "Circle") {
       ctx.arc(shape.centerX, shape.centerY, shape.radius, 0, 2 * Math.PI);
       ctx.stroke();
     }
