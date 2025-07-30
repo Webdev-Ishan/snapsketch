@@ -222,7 +222,10 @@ export default function ProfilePage() {
                   className="group backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 transform hover:scale-105"
                 >
                   {/* Room Info */}
-                  <div className="p-6">
+                  <div
+                    onClick={() => router.push(`/Canvas/${room.id}`)}
+                    className="p-6"
+                  >
                     <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-purple-400 transition-colors">
                       {room.roomname}
                     </h3>

@@ -11,4 +11,10 @@ authRouter.post(
 );
 authRouter.post("/signin", authController.signinController);
 authRouter.get("/profile", middleware, authController.ProfileController);
+authRouter.put(
+  "/profile",
+  middleware,
+  multer.single("profilepic"),
+  authController.editProfileController
+);
 export default authRouter;

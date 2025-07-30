@@ -197,3 +197,81 @@ export const ProfileController = async (req: Request, res: Response) => {
     }
   }
 };
+
+export const editProfileController = async (req: Request, res: Response) => {
+  const userid = req.userid;
+
+  if (!userid) {
+    return res.status(400).json({
+      success: false,
+      message: "Id not found",
+    });
+  }
+
+  if (!req.body) {
+    return res.status(400).json({
+      success: false,
+      message: "Values not found",
+    });
+  }
+
+  const parsedBody = signupSchema.safeParse(req.body);
+  if (!parsedBody.success) {
+    res.status(401).json({
+      success: false,
+      message: parsedBody.error.message,
+    });
+    return;
+  }
+
+  const { name, email, password } = parsedBody.data;
+
+  try {
+    const existUser = await prisma.user.findUnique({
+      where: {
+        id:userid
+      },
+    });
+
+    if (!existUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User does not exist",
+      });
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    let imageupload;
+
+    if (req.file && req.file.path) {
+      imageupload = await cloudinary.uploader.upload(req.file.path, {
+        resource_type: "image",
+      });
+    }
+
+    await prisma.user.update({
+      where: {
+        email: existUser.email,
+      },
+      data: {
+        name: name,
+        email: email,
+        password: hashedPassword,
+        profilepic: imageupload?.secure_url,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Updation successfull",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
