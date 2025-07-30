@@ -154,6 +154,12 @@ export const deleteRoomcontroller = async (req: Request, res: Response) => {
       });
     }
 
+    await prisma.messages.deleteMany({
+      where: {
+        roomId: roomID,
+      },
+    });
+
     await prisma.room.delete({
       where: {
         id: roomID,

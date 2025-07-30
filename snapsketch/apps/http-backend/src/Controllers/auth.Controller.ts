@@ -159,6 +159,16 @@ export const ProfileController = async (req: Request, res: Response) => {
       where: {
         id: userid,
       },
+      include: {
+        roomsCreated: {
+          select: {
+            id: true,
+            roomname: true,
+            slug: true,
+            createdAt: true,
+          },
+        },
+      },
     });
 
     if (!user) {
@@ -168,13 +178,14 @@ export const ProfileController = async (req: Request, res: Response) => {
       });
     }
 
-    return res.status(400).json({
+    return res.status(200).json({
       success: true,
       userinfo: {
         username: user.name,
         email: user.email,
         id: user.id,
         dp: user.profilepic,
+        rooms: user.roomsCreated,
       },
     });
   } catch (error) {

@@ -10,5 +10,5 @@ authRouter.post(
   authController.signUpcontroller
 );
 authRouter.post("/signin", authController.signinController);
-authRouter.get("/profile", middleware, authController.signinController);
+authRouter.get("/profile", middleware, authController.ProfileController);
 export default authRouter;
