@@ -11,7 +11,7 @@ type backendresponse = {
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
-export default function GiveReviewPage() {
+export default function EnquiryPage() {
   const router = useRouter();
 
   const token = localStorage.getItem("token");
@@ -23,7 +23,7 @@ export default function GiveReviewPage() {
 
     try {
       const response = await axios.post<backendresponse>(
-        `${URL}/api/review/createReview`,
+        `${URL}/api/enquiry/ask`,
         { Title, message },
         {
           headers: {
@@ -35,8 +35,8 @@ export default function GiveReviewPage() {
       console.log(response);
 
       if (response.data && response.data.success) {
-        toast.success("Review Successfull!");
-        router.push("/Reviews");
+        toast.success("Question Submitted!");
+        router.push("/");
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -120,7 +120,7 @@ export default function GiveReviewPage() {
           <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-                Review Us
+                Let US Help You
               </h2>
               <p className="text-gray-400">Start your creative journey today</p>
             </div>
