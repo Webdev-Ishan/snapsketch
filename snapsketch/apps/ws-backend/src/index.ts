@@ -1,5 +1,4 @@
 import { WebSocketServer } from "ws";
-import { JWT_SECRET } from "@repo/backend-common/config";
 import { checkUser } from "./utils/checkuser.js";
 import WebSocket from "ws";
 import { prisma } from "@repo/db/client";
@@ -26,7 +25,7 @@ type wsinterface = {
 
 const users: User[] = [];
 
-wss.on("connection", function connection(ws, request) {
+wss.on("connection", function connection(ws: WebSocket, request: Request) {
   ws.on("error", console.error);
 
   const url = request.url;
