@@ -11,6 +11,19 @@ type User = {
   rooms: string[];
 };
 
+type wsinterface = {
+  type: "join_room" | "leave_room" | "create";
+  roomID: string;
+  message?: {
+    type: "Rectangle" | "Circle";
+    x: number;
+    y: number;
+    width?: number;
+    height?: number;
+    radius?: number;
+  };
+};
+
 const users: User[] = [];
 
 wss.on("connection", function connection(ws, request) {
@@ -41,16 +54,31 @@ wss.on("connection", function connection(ws, request) {
   users.push(currentUser);
 
   ws.on("message", async function message(data) {
-    let parsedData: any;
+    let parsedData: wsinterface;
     try {
-      parsedData = JSON.parse(data.toString());
+      parsedData = JSON.parse(data.toString()) as wsinterface;
     } catch (e) {
       console.error("Invalid JSON received:", data.toString());
       return;
     }
 
     if (parsedData.type === "join_room") {
+      if (currentUser.rooms.includes(parsedData.roomID)) {
+        ws.send(JSON.stringify({ error: "Already in room" }));
+        return;
+      }
       currentUser.rooms.push(parsedData.roomID);
+      const shapes = await prisma.shapes.findMany({
+        where: {
+          roomId: parsedData.roomID,
+        },
+      });
+      ws.send(
+        JSON.stringify({
+          type: "history",
+          shapes,
+        })
+      );
     }
 
     if (parsedData.type === "leave_room") {
@@ -59,29 +87,56 @@ wss.on("connection", function connection(ws, request) {
       );
     }
 
-    if (parsedData.type === "chat") {
-      const roomId = parsedData.roomID;
-      const message = parsedData.message;
-
-      await prisma.messages.create({
-        data: {
-          roomId: roomId,
-          message: message,
-          senderId: currentUser.userID,
-        },
-      });
-
-      users.forEach((user) => {
-        if (user.rooms.includes(roomId)) {
-          user.ws.send(
-            JSON.stringify({
-              type: "chat",
-              message: message,
-              roomId,
-            })
-          );
+    if (parsedData.type === "create") {
+      if (!currentUser.rooms.includes(parsedData.roomID)) {
+        ws.send(JSON.stringify({ error: "Not in room" }));
+        return;
+      }
+      if (parsedData.message) {
+        const roomId = parsedData.roomID;
+        const type = parsedData.message.type;
+        const x = parsedData.message.x;
+        const y = parsedData.message.y;
+        let width;
+        let height;
+        let radius;
+        if (parsedData.message.width) {
+          width = parsedData.message.width;
         }
-      });
+
+        if (parsedData.message.height) {
+          height = parsedData.message.height;
+        }
+
+        if (parsedData.message.radius) {
+          radius = parsedData.message.radius;
+        }
+
+        await prisma.shapes.create({
+          data: {
+            roomId: roomId,
+            type: type,
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            radius: radius,
+            senderId: currentUser.userID,
+          },
+        });
+
+        users.forEach((user) => {
+          if (user.rooms.includes(roomId)) {
+            user.ws.send(
+              JSON.stringify({
+                type: "create",
+                message: parsedData.message,
+                roomId,
+              })
+            );
+          }
+        });
+      }
     }
   });
 

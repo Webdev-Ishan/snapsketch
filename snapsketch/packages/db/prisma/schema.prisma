@@ -14,30 +14,35 @@ datasource db {
 }
 
 model User {
-  id               String     @id @default(uuid())
+  id               String    @id @default(uuid())
   name             String
-  email            String     @unique
+  email            String    @unique
   password         String
   profilepic       String?
-  roomsCreated     Room[]     @relation("creator")
-  messagesSent     Messages[] @relation("sender")
-  reviewsGiven     Reviews[]  @relation("reviewsdoneby")
-  enquiryquestions Enquiry[]  @relation("askedby")
+  roomsCreated     Room[]    @relation("creator")
+  messagesSent     Shapes[]  @relation("sender")
+  reviewsGiven     Reviews[] @relation("reviewsdoneby")
+  enquiryquestions Enquiry[] @relation("askedby")
 }
 
 model Room {
-  id               String     @id @default(uuid())
+  id               String   @id @default(uuid())
   roomname         String
   slug             String
-  createdAt        DateTime   @default(now())
-  creator          User?      @relation("creator", fields: [creatorId], references: [id])
+  createdAt        DateTime @default(now())
+  creator          User?    @relation("creator", fields: [creatorId], references: [id])
   creatorId        String
-  messagesIncluded Messages[] @relation("room")
+  messagesIncluded Shapes[] @relation("room")
 }
 
-model Messages {
+model Shapes {
   id       Int      @id @default(autoincrement())
-  message  String
+  type     Types
+  x        Float
+  y        Float
+  width    Float?
+  height   Float?
+  radius   Float?
   sendedAT DateTime @default(now())
   Room     Room?    @relation("room", fields: [roomId], references: [id])
   roomId   String
@@ -59,4 +64,10 @@ model Enquiry {
   message  String
   sender   User?  @relation("askedby", fields: [senderId], references: [id])
   senderId String
+}
+
+enum Types {
+  Rectangle
+  Circle
+  Line
 }

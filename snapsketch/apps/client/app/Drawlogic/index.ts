@@ -13,10 +13,20 @@ type Shapes =
       radius: number;
     };
 
+let socket: WebSocket | null = null;
+const URL = process.env.NEXT_PUBLIC_WS_URL!;
 export function initDraw(canvas: HTMLCanvasElement, shape: string) {
   const allShapes: Shapes[] = [];
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  if (!socket) {
+    socket = new WebSocket(URL);
+
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+  }
 
   let startX = 0;
   let startY = 0;
@@ -54,7 +64,7 @@ export function initDraw(canvas: HTMLCanvasElement, shape: string) {
         type: "Circle",
         centerX: startX,
         centerY: startY,
-        radius:  endX,
+        radius: endX,
       });
     }
     drawAllShapes(ctx, canvas, allShapes);
@@ -78,7 +88,7 @@ export function initDraw(canvas: HTMLCanvasElement, shape: string) {
       ctx.strokeRect(startX, startY, width, height);
     } else {
       ctx.strokeStyle = "blue";
-      ctx.arc(startX, startY,currX, 0, 2 * Math.PI);
+      ctx.arc(startX, startY, currX, 0, 2 * Math.PI);
       ctx.stroke();
     }
   });

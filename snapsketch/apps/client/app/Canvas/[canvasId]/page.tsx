@@ -7,7 +7,7 @@ export default function Canvas() {
   const [shape, setshape] = useState("");
   useEffect(() => {
     if (canvasref.current) {
-      initDraw(canvasref.current,shape);
+      initDraw(canvasref.current, shape);
     }
   }, [canvasref, shape]);
 
@@ -30,7 +30,12 @@ export default function Canvas() {
         </button>
       </div>
       <div className="p-4">
-      <canvas className="p-8" ref={canvasref} width={1100} height={1100}></canvas>
+        <canvas
+          className="p-8"
+          ref={canvasref}
+          width={1100}
+          height={1100}
+        ></canvas>
       </div>
     </div>
   );
