@@ -2,7 +2,7 @@
 import { initDraw } from "@/app/Drawlogic";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-
+import { Circle,Slash,Square } from "lucide-react";
 export default function Canvas() {
   const router = useRouter();
   const params = useParams();
@@ -42,13 +42,13 @@ export default function Canvas() {
           onClick={() => handleShapeChange("Rectangle")}
           className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
         >
-          Rectangle
+         <Square/>
         </button>
         <button
           onClick={() => handleShapeChange("Circle")}
           className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
         >
-          Circle
+          <Circle className="text-white"/>
         </button>
         <button
           onClick={() => handleShapeChange("Text")}
@@ -60,7 +60,7 @@ export default function Canvas() {
           onClick={() => handleShapeChange("Line")}
           className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
         >
-          \
+          <Slash />
         </button>
       </div>
 
