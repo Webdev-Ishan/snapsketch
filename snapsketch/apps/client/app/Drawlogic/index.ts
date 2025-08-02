@@ -1,6 +1,7 @@
 import {
   convertServerShapeToClient,
   creatCircle,
+  createText,
   creatRectangle,
 } from "../helpers/ws.helper";
 
@@ -17,6 +18,12 @@ type Shapes =
       x: number;
       y: number;
       radius: number;
+    }
+  | {
+      type: "Text";
+      message: string;
+      x: number;
+      y: number;
     };
 
 let socket: WebSocket | null = null;
@@ -118,7 +125,21 @@ export function initDraw(
         y: startY,
         radius: radius,
       });
+    } else if (shape() === "Text") {
+      const message = prompt();
+      const textX = startX;
+      const textY = startY;
+
+      createText(socket, roomID, message, textX, textY);
+
+      allShapes.push({
+        type: "Text",
+        message: message ?? "",
+        x: textX,
+        y: textY,
+      });
     }
+
     drawAllShapes(ctx, canvas, allShapes);
   });
   canvas.addEventListener("mousemove", (e) => {
@@ -138,10 +159,16 @@ export function initDraw(
 
     if (shape() === "Rectangle") {
       ctx.strokeRect(startX, startY, width, height);
-    } else {
+    } else if (shape() === "Circle") {
       const radius = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
       ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
       ctx.stroke();
+    } else {
+      ctx.font = "30px Arial";
+      ctx.fillStyle = "blue";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("", startX, startY);
     }
   });
 
@@ -161,6 +188,12 @@ export function initDraw(
       } else if (shape.type === "Circle") {
         ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
         ctx.stroke();
+      } else if (shape.type === "Text") {
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "blue";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(shape.message, shape.x, shape.y);
       }
     });
   }

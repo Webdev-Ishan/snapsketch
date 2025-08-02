@@ -38,8 +38,9 @@ model Room {
 model Shapes {
   id       Int      @id @default(autoincrement())
   type     Types
-  x        Float
-  y        Float
+  x        Float?
+  y        Float?
+  message  String?
   width    Float?
   height   Float?
   radius   Float?
@@ -70,4 +71,5 @@ enum Types {
   Rectangle
   Circle
   Line
+  Text
 }

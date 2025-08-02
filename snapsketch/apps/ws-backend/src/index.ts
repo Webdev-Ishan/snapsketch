@@ -14,9 +14,10 @@ type wsinterface = {
   type: "join_room" | "leave_room" | "create";
   roomID: string;
   message?: {
-    type: "Rectangle" | "Circle";
-    x: number;
-    y: number;
+    type: "Rectangle" | "Circle" | "Text";
+    x?: number;
+    y?: number;
+    message?: string;
     width?: number;
     height?: number;
     radius?: number;
@@ -94,8 +95,18 @@ wss.on("connection", function connection(ws: WebSocket, request: Request) {
       if (parsedData.message) {
         const roomId = parsedData.roomID;
         const type = parsedData.message.type;
-        const x = parsedData.message.x;
-        const y = parsedData.message.y;
+        let x;
+        let y;
+        let message;
+        if (parsedData.message.x) {
+          x = parsedData.message.x;
+        }
+        if (parsedData.message.y) {
+          y = parsedData.message.y;
+        }
+        if (parsedData.message.message) {
+          message = parsedData.message.message;
+        }
         let width;
         let height;
         let radius;
@@ -117,6 +128,7 @@ wss.on("connection", function connection(ws: WebSocket, request: Request) {
             type: type,
             x: x,
             y: y,
+            message: message,
             width: width,
             height: height,
             radius: radius,

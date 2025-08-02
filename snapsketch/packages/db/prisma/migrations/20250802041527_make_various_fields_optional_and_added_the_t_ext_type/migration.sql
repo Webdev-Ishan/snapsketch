@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Shapes" ADD COLUMN     "message" TEXT,
+ALTER COLUMN "x" DROP NOT NULL,
+ALTER COLUMN "y" DROP NOT NULL;
