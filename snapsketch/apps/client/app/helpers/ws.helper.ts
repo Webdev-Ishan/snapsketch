@@ -8,8 +8,8 @@ type Shapes =
     }
   | {
       type: "Circle";
-      centerX: number;
-      centerY: number;
+      x: number;
+      y: number;
       radius: number;
     };
 
@@ -79,8 +79,8 @@ export const convertServerShapeToClient = (shape: Shapes): Shapes => {
   } else {
     return {
       type: "Circle",
-      centerX: shape.centerX,
-      centerY: shape.centerY,
+      x: shape.x, // fallback to x
+      y: shape.y, // fallback to y
       radius: shape.radius,
     };
   }

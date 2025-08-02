@@ -14,8 +14,8 @@ type Shapes =
     }
   | {
       type: "Circle";
-      centerX: number;
-      centerY: number;
+      x: number;
+      y: number;
       radius: number;
     };
 
@@ -24,7 +24,7 @@ const URL = process.env.NEXT_PUBLIC_WS_URL!;
 
 export function initDraw(
   canvas: HTMLCanvasElement,
-  shape: string,
+  shape: () => string,
   token: string,
   roomID: string
 ) {
@@ -37,7 +37,6 @@ export function initDraw(
   }
 
   if (!socket) {
-    console.log("🔐 token being sent:", token);
     socket = new WebSocket(`${URL}?token=${token}`);
 
     socket.onopen = () => {
@@ -99,7 +98,7 @@ export function initDraw(
     const width = endX - startX;
     const height = endY - startY;
 
-    if (shape === "Rectangle") {
+    if (shape() === "Rectangle") {
       creatRectangle(socket, roomID, startX, startY, width, height);
       allShapes.push({
         type: "Rectangle",
@@ -108,15 +107,15 @@ export function initDraw(
         width,
         height,
       });
-    } else {
+    } else if (shape() === "Circle") {
       const radius = Math.sqrt(
         Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
       );
       creatCircle(socket, roomID, startX, startY, radius);
       allShapes.push({
         type: "Circle",
-        centerX: startX,
-        centerY: startY,
+        x: startX,
+        y: startY,
         radius: radius,
       });
     }
@@ -137,7 +136,7 @@ export function initDraw(
     ctx.strokeStyle = "blue";
     ctx.beginPath();
 
-    if (shape === "Rectangle") {
+    if (shape() === "Rectangle") {
       ctx.strokeRect(startX, startY, width, height);
     } else {
       const radius = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
@@ -160,7 +159,7 @@ export function initDraw(
       if (shape.type === "Rectangle") {
         ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
       } else if (shape.type === "Circle") {
-        ctx.arc(shape.centerX, shape.centerY, shape.radius, 0, 2 * Math.PI);
+        ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
         ctx.stroke();
       }
     });

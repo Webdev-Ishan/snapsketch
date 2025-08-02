@@ -56,7 +56,7 @@ export default function SigninPage() {
         if (status === 400) {
           toast.error("Invalid Inputs");
         } else if (status === 409) {
-          toast.error("User already exists");
+          toast.error("Email or password is wrong");
         } else if (status === 500) {
           toast.error(error.message);
           console.log(error);
