@@ -17,6 +17,13 @@ type Shapes =
       message: string;
       x: number;
       y: number;
+    }
+  | {
+      type: "Line";
+      x: number;
+      y: number;
+      width: number;
+      height: number;
     };
 export const creatRectangle = (
   socket: WebSocket | null,
@@ -84,9 +91,9 @@ export const createText = (
     roomID: roomID,
     message: {
       type: "Text",
+      message: message,
       x: x,
       y: y,
-      message: message,
     },
   };
 
@@ -94,6 +101,35 @@ export const createText = (
     alert("Socket not open, message not sent");
     return;
   }
+
+  socket.send(JSON.stringify(payload));
+};
+
+export const createLine = (
+  socket: WebSocket | null,
+  roomID: string,
+  startx: number,
+  starty: number,
+  endX: number,
+  endY: number
+) => {
+  const payload = {
+    type: "create",
+    roomID: roomID,
+    message: {
+      type: "Line",
+      x: startx,
+      y: starty,
+      width: endX,
+      height: endY,
+    },
+  };
+
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    alert("Socket not open, message not sent");
+    return;
+  }
+console.log("Sending Line:", { startx, starty, endX, endY });
 
   socket.send(JSON.stringify(payload));
 };
@@ -114,12 +150,20 @@ export const convertServerShapeToClient = (shape: Shapes): Shapes => {
       y: shape.y, // fallback to y
       radius: shape.radius,
     };
-  } else {
+  } else if (shape.type === "Text") {
     return {
       type: shape.type,
       message: shape.message,
       x: shape.x,
       y: shape.y,
+    };
+  } else {
+    return {
+      type: shape.type,
+      x: shape.x,
+      y: shape.y,
+      width: shape.width,
+      height: shape.height,
     };
   }
 };

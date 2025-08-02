@@ -1,6 +1,7 @@
 import {
   convertServerShapeToClient,
   creatCircle,
+  createLine,
   createText,
   creatRectangle,
 } from "../helpers/ws.helper";
@@ -24,6 +25,13 @@ type Shapes =
       message: string;
       x: number;
       y: number;
+    }
+  | {
+      type: "Line";
+      x: number;
+      y: number;
+      width: number;
+      height: number;
     };
 
 let socket: WebSocket | null = null;
@@ -84,6 +92,8 @@ export function initDraw(
 
   let startX = 0;
   let startY = 0;
+  let endX = 0;
+  let endY = 0;
   let clicked = false;
 
   canvas.addEventListener("mousedown", (e) => {
@@ -99,8 +109,8 @@ export function initDraw(
     clicked = false;
 
     const rect = canvas.getBoundingClientRect();
-    const endX = e.clientX - rect.left;
-    const endY = e.clientY - rect.top;
+    endX = e.clientX - rect.left;
+    endY = e.clientY - rect.top;
 
     const width = endX - startX;
     const height = endY - startY;
@@ -138,9 +148,11 @@ export function initDraw(
         x: textX,
         y: textY,
       });
+    } else if (shape() === "Line") {
+      createLine(socket, roomID, startX, startY, endX, endY);
     }
 
-    drawAllShapes(ctx, canvas, allShapes);
+    // drawAllShapes(ctx, canvas, allShapes);
   });
   canvas.addEventListener("mousemove", (e) => {
     if (!clicked) return;
@@ -163,12 +175,19 @@ export function initDraw(
       const radius = Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
       ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
       ctx.stroke();
-    } else {
+    } else if (shape() === "Text") {
       ctx.font = "30px Arial";
       ctx.fillStyle = "blue";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("", startX, startY);
+    } else if (shape() === "Line") {
+      ctx.strokeStyle = "blue";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(currX, currY); // ← use live current position here
+      ctx.stroke();
     }
   });
 
@@ -194,6 +213,15 @@ export function initDraw(
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(shape.message, shape.x, shape.y);
+      } else if (shape.type === "Line") {
+        ctx.strokeStyle = "blue";
+        ctx.lineWidth = 2;
+
+        // Draw the line
+        ctx.beginPath();
+        ctx.moveTo(shape.x, shape.y); // Start point
+        ctx.lineTo(shape.width, shape.height); // End point
+        ctx.stroke();
       }
     });
   }
