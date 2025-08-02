@@ -40,25 +40,25 @@ export default function Canvas() {
       <div className="w-full mt-4 mb-4 p-6 flex justify-center gap-4 items-center">
         <button
           onClick={() => handleShapeChange("Rectangle")}
-          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
         >
          <Square/>
         </button>
         <button
           onClick={() => handleShapeChange("Circle")}
-          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           <Circle className="text-white"/>
         </button>
         <button
           onClick={() => handleShapeChange("Text")}
-          className="text-white font-bold bg-blue-700 hover:bg-blue-800  rounded-lg text-sm px-5 py-2.5"
+          className="text-white font-bold bg-blue-700 hover:bg-blue-900  rounded-lg text-sm px-5 py-2.5"
         >
           Aa
         </button>
         <button
           onClick={() => handleShapeChange("Line")}
-          className="text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           <Slash />
         </button>

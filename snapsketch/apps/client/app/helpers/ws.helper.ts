@@ -129,7 +129,6 @@ export const createLine = (
     alert("Socket not open, message not sent");
     return;
   }
-console.log("Sending Line:", { startx, starty, endX, endY });
 
   socket.send(JSON.stringify(payload));
 };

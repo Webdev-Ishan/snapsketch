@@ -43,7 +43,7 @@ export function initDraw(
   token: string,
   roomID: string
 ) {
-  console.log("✅ initDraw called with shape:", shape);
+  
   const allShapes: Shapes[] = [];
   const ctx = canvas.getContext("2d");
   if (!ctx) {
