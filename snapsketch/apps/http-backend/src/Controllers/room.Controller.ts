@@ -1,4 +1,4 @@
-import { CreateRoomSchema } from "@repo/common/types";
+import { CreateRoomSchema, SearchRoomSchema } from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import { Request, Response } from "express";
 
@@ -92,7 +92,7 @@ export const getRoomcontroller = async (req: Request, res: Response) => {
       });
     }
 
-    const messages = await prisma.messages.findMany({
+    const messages = await prisma.shapes.findMany({
       where: {
         roomId: roomID,
       },
@@ -154,7 +154,7 @@ export const deleteRoomcontroller = async (req: Request, res: Response) => {
       });
     }
 
-    await prisma.messages.deleteMany({
+    await prisma.shapes.deleteMany({
       where: {
         roomId: roomID,
       },
@@ -169,6 +169,65 @@ export const deleteRoomcontroller = async (req: Request, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Deletion successfull",
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const searchRoomController = async (req: Request, res: Response) => {
+  const userid = req.userid;
+  const parsedBody = SearchRoomSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    res.status(400).json({
+      success: false,
+      message: parsedBody.error,
+    });
+    return;
+  }
+
+  const { roomname } = parsedBody.data;
+
+  if (!userid) {
+    res.status(401).json({
+      success: false,
+      message: "User id not found",
+    });
+  }
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userid,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    const result = await prisma.room.findMany({
+      where: {
+        roomname: {
+          contains: roomname,
+          mode:"insensitive"
+        },
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      result,
     });
   } catch (error) {
     if (error instanceof Error) {

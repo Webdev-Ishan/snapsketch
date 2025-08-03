@@ -13,7 +13,7 @@ export const signinSchema = z.object({
 
 export const CreateRoomSchema = z.object({
   roomname: z.string().min(3).max(20),
-  slug: z.string(),
+  slug: z.string().min(3).max(35),
 });
 
 export const CreateReviewSchema = z.object({
@@ -24,4 +24,8 @@ export const CreateReviewSchema = z.object({
 export const CreateEnquirySchema = z.object({
   Title: z.string().min(3).max(50),
   message: z.string().max(300),
+});
+
+export const SearchRoomSchema = z.object({
+  roomname: z.string().min(3).max(20),
 });
