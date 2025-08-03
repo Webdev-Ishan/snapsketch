@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Mail, Edit3, Plus, Crown, LogOut } from "lucide-react";
+import { Mail, Edit3, Plus, Crown, LogOut, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -210,13 +210,20 @@ export default function ProfilePage() {
       {/* Create Room */}
       <section className="relative z-10 px-6 py-12">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-left gap-6 mb-8">
             <button
               onClick={() => router.push("/Createcanvas")}
               className="bg-gradient-to-r from-purple-600 to-cyan-600 px-6 py-3 rounded-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
             >
               <Plus className="w-5 h-5" />
               <span>Create New Canvas</span>
+            </button>
+            <button
+              onClick={() => router.push("/Search")}
+              className="bg-gradient-to-r from-purple-600 to-cyan-600 px-6 py-3 rounded-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
+            >
+              <Search className="w-5 h-5" />
+              <span>Search</span>
             </button>
           </div>
 

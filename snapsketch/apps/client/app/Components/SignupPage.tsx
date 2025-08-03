@@ -22,18 +22,19 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SignupPage() {
   const router = useRouter();
-  const token = localStorage.getItem("token");
+  const [token,settoken]=useState<string | null>(null);
+  
   useEffect(() => {
-     const token = localStorage.getItem("token");
-     const expireTime = Number(localStorage.getItem("expireTime"));
-     if (!token || Date.now() > expireTime) {
-       localStorage.removeItem("token");
-       localStorage.removeItem("expireTime");
-       router.push("/Signin");
-     } else {
-       router.push("/Profile")
-     }
-   }, [token, router]);
+    const token = localStorage.getItem("token");
+    const expireTime = Number(localStorage.getItem("expireTime"));
+    if (!token || Date.now() > expireTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireTime");
+    } else {
+      router.push("/Profile");
+    }
+  }, [token, router]);
+
 
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
@@ -78,6 +79,7 @@ export default function SignupPage() {
           toast.error("Invalid Inputs");
         } else if (status === 409) {
           toast.error("User already exists");
+          router.push("/Signin");
         } else if (status === 500) {
           toast.error(error.message);
           console.log(error);
