@@ -73,10 +73,10 @@ export default function Searchpage() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="w-full max-w-2xl px-6">
+      <div className="w-full max-w-xl px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-5xl font-bold text-blue-600">
             Search
           </h1>
           <p className="text-xl text-gray-300">Find what you are looking for</p>
@@ -86,7 +86,7 @@ export default function Searchpage() {
         <form onSubmit={handleSearch} className="relative">
           <div className="relative group">
             <Search
-              className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-pink-400 transition-colors z-10"
+              className="absolute left-6 top-1/2 transform -translate-y-1/2 text-gray-400 group-hover:text-blue-500 transition-colors z-10"
               size={24}
             />
             <input
@@ -94,15 +94,15 @@ export default function Searchpage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Type your search here..."
-              className="w-full bg-gray-900/50 backdrop-blur-sm border-2 border-gray-700 focus:border-pink-500 focus:bg-gray-900/70 rounded-2xl pl-16 pr-6 py-6 text-lg transition-all duration-300 outline-none"
+              className="w-full bg-gray-900/50 backdrop-blur-sm border-2 border-gray-700 focus:border-blue-500 focus:bg-gray-900/70 rounded-2xl pl-16 pr-6 py-6 text-md transition-all duration-300 outline-none"
             />
-            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
           </div>
 
           {/* Search Button */}
           <button
             type="submit"
-            className="mt-6 w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             Search
           </button>
@@ -110,28 +110,26 @@ export default function Searchpage() {
 
         <section className="relative z-10 px-6 py-12">
           {rooms.length === 0 ? (
-            <p className="text-gray-400">No Rooms found.</p>
+            <p className="text-gray-400 text-center text-lg">No Rooms found.</p>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
               {rooms.map((room, idx) => (
                 <div
                   key={idx}
-                  className="group  backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 transform hover:scale-105"
+                  className="group bg-gray-900/60 border border-blue-500/10 backdrop-blur-md rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:border-blue-500 hover:scale-[1.03]"
                 >
                   {/* Room Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-purple-400 transition-colors">
-                      {room.roomname}
-                    </h3>
+                  <h3 className="text-xl font-semibold text-white group-hover:text-blue-400 transition-colors mb-4">
+                    {room.roomname}
+                  </h3>
 
-                    <button
-                      onClick={() => router.push(`/SlugChecker/${room.id}`)}
-                      type="button"
-                      className="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-                    >
-                      Visit Room
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => router.push(`/SlugChecker/${room.id}`)}
+                    type="button"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-light py-2.5 rounded-lg transition duration-300 transform hover:scale-[1.02] active:scale-[0.98]  px-2 focus:outline-none"
+                  >
+                    Visit Room
+                  </button>
                 </div>
               ))}
             </div>

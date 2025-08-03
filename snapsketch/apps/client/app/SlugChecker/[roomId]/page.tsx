@@ -74,14 +74,18 @@ export default function SlugChecker() {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="w-full max-w-2xl px-6">
+      <div className="w-full max-w-xxl px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Search
+          <h1 className="text-4xl md:text-5xl font-bold text-blue-600">
+            Verification
           </h1>
           <p className="text-xl text-gray-300">
             Confirm the Authorization by providing the Slug
+            <br />
+            <span className="text-green-400">
+              (A slug is an Id associated with every room)
+            </span>
           </p>
         </div>
 
@@ -97,7 +101,7 @@ export default function SlugChecker() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Type your slug here..."
-              className="w-full bg-gray-900/50 backdrop-blur-sm border-2 border-gray-700 focus:border-pink-500 focus:bg-gray-900/70 rounded-2xl pl-16 pr-6 py-6 text-lg transition-all duration-300 outline-none"
+              className="w-full bg-gray-900/50 backdrop-blur-sm border-2 border-gray-700 focus:border-pink-500 focus:bg-gray-900/70 rounded-2xl pl-16 pr-6 py-6 text-md transition-all duration-300 outline-none"
             />
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
           </div>
@@ -105,7 +109,7 @@ export default function SlugChecker() {
           {/* Search Button */}
           <button
             type="submit"
-            className="mt-6 w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             Confirm
           </button>
