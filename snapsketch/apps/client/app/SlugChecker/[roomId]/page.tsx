@@ -1,23 +1,22 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
-type room = {
-  id: string;
-  roomname: string;
-};
-
 type backendresponse = {
   success: boolean;
   message?: string;
-  result?: room[];
+  result?: {
+    id: string;
+    roomname: string;
+    slug: string;
+  };
 };
 
-export default function Searchpage() {
+export default function SlugChecker() {
   const router = useRouter();
   const [token, settoken] = useState<string | null>(null);
   useEffect(() => {
@@ -33,15 +32,16 @@ export default function Searchpage() {
     }
   }, []);
 
-  const [rooms, setrooms] = useState<room[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const params = useParams();
+  const roomId = params.roomId as string;
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await axios.post<backendresponse>(
-        `${URL}/api/room/findRoom`,
-        { roomname: searchQuery },
+        `${URL}/api/room/slugCheck`,
+        { slug: searchQuery, roomId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -52,7 +52,8 @@ export default function Searchpage() {
 
       if (response.data && response.data.success) {
         if (response.data.result) {
-          setrooms(response.data.result);
+          toast.info("Valid Slug");
+          router.push(`/Canvas/${roomId}`);
         }
       }
     } catch (error) {
@@ -61,7 +62,7 @@ export default function Searchpage() {
           localStorage.removeItem("token");
           router.push("/Signin");
         } else {
-          toast.error(error.message || "Failed to fetch Result.");
+          toast.error(error.message || "Failed to match the Slug.");
           console.log(error);
         }
       } else {
@@ -79,7 +80,9 @@ export default function Searchpage() {
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Search
           </h1>
-          <p className="text-xl text-gray-300">Find what you are looking for</p>
+          <p className="text-xl text-gray-300">
+            Confirm the Authorization by providing the Slug
+          </p>
         </div>
 
         {/* Search Form */}
@@ -93,7 +96,7 @@ export default function Searchpage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Type your search here..."
+              placeholder="Type your slug here..."
               className="w-full bg-gray-900/50 backdrop-blur-sm border-2 border-gray-700 focus:border-pink-500 focus:bg-gray-900/70 rounded-2xl pl-16 pr-6 py-6 text-lg transition-all duration-300 outline-none"
             />
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-pink-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
@@ -104,39 +107,9 @@ export default function Searchpage() {
             type="submit"
             className="mt-6 w-full bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 text-white font-semibold py-4 px-8 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98]"
           >
-            Search
+            Confirm
           </button>
         </form>
-
-        <section className="relative z-10 px-6 py-12">
-          {rooms.length === 0 ? (
-            <p className="text-gray-400">No Rooms found.</p>
-          ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {rooms.map((room, idx) => (
-                <div
-                  key={idx}
-                  className="group  backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/10 transform hover:scale-105"
-                >
-                  {/* Room Info */}
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 text-white group-hover:text-purple-400 transition-colors">
-                      {room.roomname}
-                    </h3>
-
-                    <button
-                      onClick={() => router.push(`/SlugChecker/${room.id}`)}
-                      type="button"
-                      className="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4  font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2"
-                    >
-                      Visit Room
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </section>
       </div>
     </div>
   );

@@ -29,3 +29,8 @@ export const CreateEnquirySchema = z.object({
 export const SearchRoomSchema = z.object({
   roomname: z.string().min(3).max(20),
 });
+
+export const SlugCheckSchema = z.object({
+  slug: z.string().min(3).max(35),
+  roomId: z.string(),
+});

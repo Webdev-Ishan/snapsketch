@@ -12,7 +12,7 @@ export default function Canvas() {
   const [shape, setShape] = useState("Rectangle");
   const shapeRef = useRef("Rectangle");
   const roomID = params.canvasId as string;
-
+  console.log(roomID);
   useEffect(() => {
     const token = localStorage.getItem("token");
     const expireTime = Number(localStorage.getItem("expireTime"));

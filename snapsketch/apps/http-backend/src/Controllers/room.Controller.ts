@@ -1,4 +1,8 @@
-import { CreateRoomSchema, SearchRoomSchema } from "@repo/common/types";
+import {
+  CreateRoomSchema,
+  SearchRoomSchema,
+  SlugCheckSchema,
+} from "@repo/common/types";
 import { prisma } from "@repo/db/client";
 import { Request, Response } from "express";
 
@@ -220,10 +224,74 @@ export const searchRoomController = async (req: Request, res: Response) => {
       where: {
         roomname: {
           contains: roomname,
-          mode:"insensitive"
+          mode: "insensitive",
         },
       },
     });
+
+    return res.status(200).json({
+      success: true,
+      result,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+};
+
+export const slugController = async (req: Request, res: Response) => {
+  const userid = req.userid;
+  const parsedBody = SlugCheckSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    res.status(400).json({
+      success: false,
+      message: parsedBody.error,
+    });
+    return;
+  }
+
+  const { roomId, slug } = parsedBody.data;
+
+  if (!userid) {
+    res.status(401).json({
+      success: false,
+      message: "User id not found",
+    });
+  }
+
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: userid,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+      return;
+    }
+
+    const result = await prisma.room.findUnique({
+      where: {
+        id: roomId,
+        slug: slug,
+      },
+    });
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: "Wrong Slug",
+      });
+    }
 
     return res.status(200).json({
       success: true,
