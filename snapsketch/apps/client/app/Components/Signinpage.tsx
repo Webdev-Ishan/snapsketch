@@ -17,7 +17,12 @@ export default function SigninPage() {
   const router = useRouter();
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
+    const expireTime = Number(localStorage.getItem("expireTime"));
+    if (!token || Date.now() > expireTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireTime");
+      router.push("/Signin");
+    } else {
       router.push("/Profile");
     }
   }, [router]);
@@ -45,7 +50,10 @@ export default function SigninPage() {
       );
 
       if (response.data && response.data.success) {
+        const now = new Date().getTime();
+        const expireTime = (now + 86400000).toString();
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("expireTime", expireTime);
         toast.success("Login Successfull!");
         router.push("/");
       }
@@ -57,6 +65,8 @@ export default function SigninPage() {
           toast.error("Invalid Inputs");
         } else if (status === 409) {
           toast.error("Email or password is wrong");
+        } else if (status === 401) {
+          toast.error("Invalid token");
         } else if (status === 500) {
           toast.error(error.message);
           console.log(error);

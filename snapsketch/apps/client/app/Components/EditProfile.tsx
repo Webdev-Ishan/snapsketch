@@ -32,9 +32,12 @@ export default function EditProfilePage() {
   const router = useRouter();
   const token = localStorage.getItem("token");
   useEffect(() => {
-    if (!token) {
-      router.push("/SignIn");
-      toast.info("Login please");
+    const token = localStorage.getItem("token");
+    const expireTime = Number(localStorage.getItem("expireTime"));
+    if (!token || Date.now() > expireTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireTime");
+      router.push("/Signin");
     } else {
       fetchProfile(token);
     }

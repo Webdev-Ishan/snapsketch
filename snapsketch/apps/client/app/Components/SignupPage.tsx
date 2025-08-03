@@ -24,10 +24,16 @@ export default function SignupPage() {
   const router = useRouter();
   const token = localStorage.getItem("token");
   useEffect(() => {
-    if (token) {
-      router.push("/Profile");
-    }
-  }, [token, router]);
+     const token = localStorage.getItem("token");
+     const expireTime = Number(localStorage.getItem("expireTime"));
+     if (!token || Date.now() > expireTime) {
+       localStorage.removeItem("token");
+       localStorage.removeItem("expireTime");
+       router.push("/Signin");
+     } else {
+       router.push("/Profile")
+     }
+   }, [token, router]);
 
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");
@@ -57,7 +63,10 @@ export default function SignupPage() {
       );
 
       if (response.data && response.data.success) {
+        const now = new Date().getTime();
+        const expireTime = (now + 86400000).toString();
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("expireTime", expireTime);
         toast.success("Registration Successfull!");
         router.push("/");
       }

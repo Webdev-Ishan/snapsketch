@@ -41,7 +41,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
+    const expireTime = Number(localStorage.getItem("expireTime"));
+
+    if (!token || Date.now() > expireTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireTime");
       router.push("/Signin");
     } else {
       fetchProfile(token);
@@ -88,6 +92,7 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("expireTime");
     router.push("/Signin");
   };
 
@@ -108,6 +113,7 @@ export default function ProfilePage() {
   }
 
   const token = localStorage.getItem("token");
+
   const handledelete = async (roomid: string) => {
     try {
       const response = await axios.delete<backendresponse2>(

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Lock, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -13,6 +13,16 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CanvasPage() {
   const router = useRouter();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const expireTime = Number(localStorage.getItem("expireTime"));
+    if (!token || Date.now() > expireTime) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("expireTime");
+      router.push("/Signin");
+    }
+  }, [router]);
 
   const token = localStorage.getItem("token");
   const [roomname, setroomname] = useState("");
