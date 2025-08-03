@@ -5,7 +5,7 @@ const roomRouter: Router = express.Router();
 
 roomRouter.post("/createRoom", middleware, roomContrller.createRoomController);
 roomRouter.get("/getRoom/:roomID", middleware, roomContrller.getRoomcontroller);
-roomRouter.get("/findRoom", middleware, roomContrller.searchRoomController);
+roomRouter.post("/findRoom", middleware, roomContrller.searchRoomController);
 roomRouter.delete(
   "/deleteRoom/:roomID",
   middleware,
