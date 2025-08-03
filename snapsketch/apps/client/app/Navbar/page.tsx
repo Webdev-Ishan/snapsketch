@@ -52,8 +52,11 @@ export default function Navbar() {
             >
               About
             </a>
-            <button className="bg-gradient-to-r from-purple-600 to-cyan-600 px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105">
-              Start Creating
+            <button
+              onClick={() => router.push("/Signin")}
+              className="bg-gradient-to-r from-purple-600 to-cyan-600 px-6 py-2 rounded-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105"
+            >
+              Login
             </button>
           </div>
         </div>

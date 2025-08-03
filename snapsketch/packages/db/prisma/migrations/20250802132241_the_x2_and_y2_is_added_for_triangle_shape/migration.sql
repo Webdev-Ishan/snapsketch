@@ -1,0 +1,6 @@
+-- AlterEnum
+ALTER TYPE "Types" ADD VALUE 'Triangle';
+
+-- AlterTable
+ALTER TABLE "Shapes" ADD COLUMN     "x2" DOUBLE PRECISION,
+ADD COLUMN     "y2" DOUBLE PRECISION;

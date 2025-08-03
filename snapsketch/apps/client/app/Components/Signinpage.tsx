@@ -204,32 +204,6 @@ export default function SigninPage() {
                 </div>
               </div>
 
-              {/* Terms and Privacy */}
-              <div className="flex items-start space-x-3">
-                <input
-                  type="checkbox"
-                  id="terms"
-                  className="mt-1 w-4 h-4 text-purple-600 bg-transparent border-white/20 rounded focus:ring-purple-500 focus:ring-2"
-                  required
-                />
-                <label htmlFor="terms" className="text-sm text-gray-300">
-                  I agree to the{" "}
-                  <a
-                    href="#"
-                    className="text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a
-                    href="#"
-                    className="text-purple-400 hover:text-purple-300 transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
-                </label>
-              </div>
-
               {/* Submit Button */}
               <button
                 type="submit"

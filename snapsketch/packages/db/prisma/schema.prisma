@@ -40,6 +40,8 @@ model Shapes {
   type     Types
   x        Float?
   y        Float?
+  x2       Float? // x2 and y2 are speacially for triangles
+  y2       Float?
   message  String?
   width    Float?
   height   Float?
@@ -72,4 +74,5 @@ enum Types {
   Circle
   Line
   Text
+  Triangle
 }

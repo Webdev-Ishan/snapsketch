@@ -2,7 +2,7 @@
 import { initDraw } from "@/app/Drawlogic";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-import { Circle,Slash,Square } from "lucide-react";
+import { Circle,Slash,Square,Triangle } from "lucide-react";
 export default function Canvas() {
   const router = useRouter();
   const params = useParams();
@@ -61,6 +61,12 @@ export default function Canvas() {
           className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
         >
           <Slash />
+        </button>
+         <button
+          onClick={() => handleShapeChange("Triangle")}
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
+        >
+          <Triangle />
         </button>
       </div>
 

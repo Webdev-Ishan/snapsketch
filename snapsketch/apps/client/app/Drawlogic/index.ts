@@ -1,8 +1,10 @@
+import { X } from "lucide-react";
 import {
   convertServerShapeToClient,
   creatCircle,
   createLine,
   createText,
+  createTriangle,
   creatRectangle,
 } from "../helpers/ws.helper";
 
@@ -32,6 +34,15 @@ type Shapes =
       y: number;
       width: number;
       height: number;
+    }
+  | {
+      type: "Triangle";
+      x: number;
+      y: number;
+      x2: number;
+      y2: number;
+      width: number;
+      height: number;
     };
 
 let socket: WebSocket | null = null;
@@ -43,7 +54,6 @@ export function initDraw(
   token: string,
   roomID: string
 ) {
-  
   const allShapes: Shapes[] = [];
   const ctx = canvas.getContext("2d");
   if (!ctx) {
@@ -150,6 +160,23 @@ export function initDraw(
       });
     } else if (shape() === "Line") {
       createLine(socket, roomID, startX, startY, endX, endY);
+    } else if (shape() === "Triangle") {
+      const sidelength = Math.sqrt(
+        Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2)
+      );
+
+      const height = (Math.sqrt(3) / 2) * sidelength;
+
+      const x1 = startX;
+      const y1 = startY;
+
+      const x2 = startX - sidelength / 2;
+      const y2 = startY + height;
+
+      const x3 = startX + sidelength / 2;
+      const y3 = startY + height;
+
+      createTriangle(socket, roomID, x1, y1, x2, y2, x3, y3);
     }
 
     // drawAllShapes(ctx, canvas, allShapes);
@@ -176,7 +203,7 @@ export function initDraw(
       ctx.arc(startX, startY, radius, 0, 2 * Math.PI);
       ctx.stroke();
     } else if (shape() === "Text") {
-      ctx.font = "30px Arial";
+      ctx.font = "20px Arial";
       ctx.fillStyle = "blue";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -187,6 +214,15 @@ export function initDraw(
       ctx.beginPath();
       ctx.moveTo(startX, startY);
       ctx.lineTo(currX, currY); // ← use live current position here
+      ctx.stroke();
+    } else if (shape() === "Triangle") {
+      ctx.strokeStyle = "blue";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(currX, currY); // ← use live current position here
+      ctx.lineTo(currX, currY); // ← use live current position here
+      ctx.closePath();
       ctx.stroke();
     }
   });
@@ -221,6 +257,13 @@ export function initDraw(
         ctx.beginPath();
         ctx.moveTo(shape.x, shape.y); // Start point
         ctx.lineTo(shape.width, shape.height); // End point
+        ctx.stroke();
+      } else if (shape.type === "Triangle") {
+        ctx.beginPath(); // Start a new path
+        ctx.moveTo(shape.x, shape.y); // Move to the first vertex
+        ctx.lineTo(shape.x2, shape.y2); // Draw a line to the second vertex
+        ctx.lineTo(shape.width, shape.height); // Draw a line to the third vertex
+        ctx.closePath(); // Close the path (draws a line back to the starting point)
         ctx.stroke();
       }
     });

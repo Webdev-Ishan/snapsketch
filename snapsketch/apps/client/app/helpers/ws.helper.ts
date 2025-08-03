@@ -24,6 +24,15 @@ type Shapes =
       y: number;
       width: number;
       height: number;
+    }
+  | {
+      type: "Triangle";
+      x: number;
+      y: number;
+      x2: number;
+      y2: number;
+      width: number;
+      height: number;
     };
 export const creatRectangle = (
   socket: WebSocket | null,
@@ -133,6 +142,38 @@ export const createLine = (
   socket.send(JSON.stringify(payload));
 };
 
+export const createTriangle = (
+  socket: WebSocket | null,
+  roomID: string,
+  startx: number,
+  starty: number,
+  midx: number,
+  midy: number,
+  endX: number,
+  endY: number
+) => {
+  const payload = {
+    type: "create",
+    roomID: roomID,
+    message: {
+      type: "Triangle",
+      x: startx,
+      y: starty,
+      x2: midx,
+      y2: midy,
+      width: endX,
+      height: endY,
+    },
+  };
+
+  if (!socket || socket.readyState !== WebSocket.OPEN) {
+    alert("Socket not open, message not sent");
+    return;
+  }
+
+  socket.send(JSON.stringify(payload));
+};
+
 export const convertServerShapeToClient = (shape: Shapes): Shapes => {
   if (shape.type === "Rectangle") {
     return {
@@ -156,11 +197,21 @@ export const convertServerShapeToClient = (shape: Shapes): Shapes => {
       x: shape.x,
       y: shape.y,
     };
+  } else if (shape.type === "Line") {
+    return {
+      type: shape.type,
+      x: shape.x,
+      y: shape.y,
+      width: shape.width,
+      height: shape.height,
+    };
   } else {
     return {
       type: shape.type,
       x: shape.x,
       y: shape.y,
+      x2: shape.x2,
+      y2: shape.y2,
       width: shape.width,
       height: shape.height,
     };

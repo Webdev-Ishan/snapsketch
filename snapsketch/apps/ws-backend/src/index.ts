@@ -17,6 +17,8 @@ type wsinterface = {
     type: "Rectangle" | "Circle" | "Text";
     x?: number;
     y?: number;
+    x2?: number;
+    y2?: number;
     message?: string;
     width?: number;
     height?: number;
@@ -98,11 +100,21 @@ wss.on("connection", function connection(ws: WebSocket, request: Request) {
         let x;
         let y;
         let message;
+        let x2;
+        let y2;
+
         if (parsedData.message.x) {
           x = parsedData.message.x;
         }
         if (parsedData.message.y) {
           y = parsedData.message.y;
+        }
+
+        if (parsedData.message.x2) {
+          x2 = parsedData.message.x2;
+        }
+        if (parsedData.message.y2) {
+          y2 = parsedData.message.y2;
         }
         if (parsedData.message.message) {
           message = parsedData.message.message;
@@ -128,6 +140,8 @@ wss.on("connection", function connection(ws: WebSocket, request: Request) {
             type: type,
             x: x,
             y: y,
+            x2: x2,
+            y2: y2,
             message: message,
             width: width,
             height: height,
