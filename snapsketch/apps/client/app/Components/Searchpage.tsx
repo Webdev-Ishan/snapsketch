@@ -31,7 +31,7 @@ export default function Searchpage() {
     } else {
       settoken(token);
     }
-  }, []);
+  }, [router]);
 
   const [rooms, setrooms] = useState<room[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");

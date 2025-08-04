@@ -11,8 +11,9 @@ export default function Canvas() {
 
   const [token, setToken] = useState<string | null>(null);
   const [shape, setShape] = useState("Rectangle");
+  const [zoom, setzoom] = useState(1);
   const shapeRef = useRef("Rectangle");
-  const [zoom, setZoom] = useState(1);
+  const zoomRef = useRef(1);
   const roomID = params.canvasId as string;
 
   useEffect(() => {
@@ -32,11 +33,24 @@ export default function Canvas() {
     setShape(newShape); // only for button UI update
   };
 
-  const handleZoomChange = () => {
-    if (zoom < 5) {
-      setZoom((prev) => Math.min(prev + 0.25, 5));
+  const handleZoomIn = () => {
+    if (zoomRef.current < 5) {
+      const newZoom = Math.min(zoomRef.current + 0.25, 5);
+      zoomRef.current = newZoom;
+      setzoom(newZoom);
       if (canvasRef.current && roomID && token) {
-        zoomLogic(canvasRef.current, zoom);
+        zoomLogic(canvasRef.current, newZoom);
+      }
+    }
+  };
+
+  const handleZoomOut = () => {
+    if (zoomRef.current > 0.25) {
+      const newZoom = Math.max(zoomRef.current - 0.25, 0.25);
+      zoomRef.current = newZoom;
+      setzoom(newZoom);
+      if (canvasRef.current && roomID && token) {
+        zoomLogic(canvasRef.current, newZoom);
       }
     }
   };
@@ -45,7 +59,7 @@ export default function Canvas() {
     if (canvasRef.current && roomID && token) {
       initDraw(canvasRef.current, () => shapeRef.current, token, roomID, zoom);
     }
-  }, [canvasRef, roomID, token]);
+  }, [canvasRef, roomID, token, zoom]);
 
   return (
     <div>
@@ -81,17 +95,17 @@ export default function Canvas() {
           <Triangle />
         </button>
         <button
-          onClick={() => handleZoomChange()}
+          onClick={() => handleZoomIn()}
           className="text-white ml-12 bg-transparent border-white hover:border-green-400  font-extralight rounded-lg text-sm px-5 py-2.5 border-1"
         >
           <Plus />
         </button>
-        {/* <button
-          onClick={() => handleZoomChange()}
+        <button
+          onClick={() => handleZoomOut()}
           className="text-white   bg-transparent border-white hover:border-green-400  font-extralight rounded-lg text-sm px-5 py-2.5 border-1"
         >
           <Minus />
-        </button> */}
+        </button>
       </div>
 
       <div className="p-4">
