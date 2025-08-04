@@ -8,11 +8,11 @@ import {
   Download,
   Share2,
   ArrowRight,
-  Play,
   ChevronDown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
+import Home from "../public/home.jpg";
+import Image from "next/image";
 function App() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -104,38 +104,17 @@ function App() {
         </div>
       </section>
 
-      {/* Demo Canvas Preview */}
       <section className="relative z-10 px-6 py-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="relative">
-            {/* Glassmorphism Card */}
-            <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
-              <div className="bg-gray-800/50 rounded-xl h-96 flex items-center justify-center relative overflow-hidden">
-                {/* Simulated Canvas Interface */}
-                <div className="absolute inset-4 border-2 border-dashed border-gray-600 rounded-lg"></div>
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-xl mx-auto mb-4 flex items-center justify-center">
-                    <Palette className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-semibold mb-2">
-                    Interactive Canvas
-                  </h3>
-                  <p className="text-gray-400">
-                    Start drawing to see the magic happen
-                  </p>
-                </div>
-
-                {/* Floating UI Elements */}
-                <div className="absolute top-4 left-4 backdrop-blur-sm bg-white/10 rounded-lg px-3 py-2 text-sm">
-                  Toolbar
-                </div>
-                <div className="absolute top-4 right-4 backdrop-blur-sm bg-white/10 rounded-lg px-3 py-2 text-sm flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <span>3 users online</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="max-w-6xl mx-auto p-1">
+          <Image
+            src={Home}
+            alt="Homepage Illustration"
+            width={1600}
+            height={400}
+            className="object-contain mx-auto rounded-lg border-1 border-purple-500"
+            quality={100}
+            priority // Optional: improves LCP performance for above-the-fold images
+          />
         </div>
       </section>
 

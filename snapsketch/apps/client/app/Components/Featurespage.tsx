@@ -8,7 +8,6 @@ import {
   Shield,
   ArrowRight,
   Sparkles,
-  Play,
   CheckCircle,
   Clock,
   Globe,
@@ -214,14 +213,6 @@ export default function FeaturesPage() {
                       <span className="text-gray-300">{item}</span>
                     </div>
                   ))}
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <button className="group bg-gradient-to-r from-purple-600 to-cyan-600 px-8 py-4 rounded-xl font-semibold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2">
-                    <span>Try This Feature</span>
-                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                
                 </div>
               </div>
 

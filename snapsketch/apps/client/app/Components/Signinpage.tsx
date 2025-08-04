@@ -55,7 +55,7 @@ export default function SigninPage() {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("expireTime", expireTime);
         toast.success("Login Successfull!");
-        router.push("/");
+        router.push("/Profile");
       }
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

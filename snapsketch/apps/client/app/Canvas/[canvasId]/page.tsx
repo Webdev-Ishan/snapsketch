@@ -62,59 +62,61 @@ export default function Canvas() {
   }, [canvasRef, roomID, token, zoom]);
 
   return (
-    <div>
-      <div className="w-full mt-4 mb-4 p-6 flex justify-center gap-4 items-center">
+    <div className="flex flex-col items-center px-4">
+      {/* Toolbar */}
+      <div className="w-full mt-4 mb-4 p-4 flex flex-wrap justify-center gap-4 items-center">
         <button
           onClick={() => handleShapeChange("Rectangle")}
-          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2"
         >
           <Square />
         </button>
         <button
           onClick={() => handleShapeChange("Circle")}
-          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2"
         >
-          <Circle className="text-white" />
+          <Circle />
         </button>
         <button
           onClick={() => handleShapeChange("Text")}
-          className="text-white font-bold bg-blue-700 hover:bg-blue-900  rounded-lg text-sm px-5 py-2.5"
+          className="text-white font-bold bg-blue-700 hover:bg-blue-900 rounded-lg text-sm px-4 py-2"
         >
           Aa
         </button>
         <button
           onClick={() => handleShapeChange("Line")}
-          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2"
         >
           <Slash />
         </button>
         <button
           onClick={() => handleShapeChange("Triangle")}
-          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-5 py-2.5"
+          className="text-white bg-blue-700 hover:bg-blue-900 font-medium rounded-lg text-sm px-4 py-2"
         >
           <Triangle />
         </button>
         <button
-          onClick={() => handleZoomIn()}
-          className="text-white ml-12 bg-transparent border-white hover:border-green-400  font-extralight rounded-lg text-sm px-5 py-2.5 border-1"
+          onClick={handleZoomIn}
+          className="text-white bg-transparent border border-white hover:border-green-400 font-light rounded-lg text-sm px-4 py-2"
         >
           <Plus />
         </button>
         <button
-          onClick={() => handleZoomOut()}
-          className="text-white   bg-transparent border-white hover:border-green-400  font-extralight rounded-lg text-sm px-5 py-2.5 border-1"
+          onClick={handleZoomOut}
+          className="text-white bg-transparent border border-white hover:border-green-400 font-light rounded-lg text-sm px-4 py-2"
         >
           <Minus />
         </button>
       </div>
 
-      <div className="p-4">
+      {/* Canvas */}
+      <div className="w-full h-[80vh] p-2 overflow-scroll border border-gray-400">
         <canvas
-          className="p-8 border border-gray-400 overflow-scroll "
           ref={canvasRef}
           width={11000}
           height={11000}
-        ></canvas>
+          className="block"
+        />
       </div>
     </div>
   );

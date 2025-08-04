@@ -43,7 +43,7 @@ export function drawAllShapes(
 ) {
   ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset
   ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-  ctx.save();
+
   ctx.scale(zoom, zoom); // Apply zoom
 
   shapes.forEach((shape) => {
@@ -79,6 +79,4 @@ export function drawAllShapes(
       ctx.stroke();
     }
   });
-  
-  ctx.restore();
 }
