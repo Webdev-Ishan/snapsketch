@@ -110,7 +110,7 @@ export default function Canvas() {
 
       <div className="p-4">
         <canvas
-          className="p-8 border border-gray-400 overflow-scroll"
+          className="p-8 border border-gray-400 overflow-scroll "
           ref={canvasRef}
           width={11000}
           height={11000}
