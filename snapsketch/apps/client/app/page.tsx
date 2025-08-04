@@ -95,10 +95,6 @@ function App() {
                 <span>Start Creating</span>
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
-              <button className="group backdrop-blur-sm bg-white/10 border border-white/20 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-white/20 transition-all duration-300 flex items-center space-x-2">
-                <Play className="w-5 h-5" />
-                <span>Watch Demo</span>
-              </button>
             </div>
 
             <div className="animate-bounce">
