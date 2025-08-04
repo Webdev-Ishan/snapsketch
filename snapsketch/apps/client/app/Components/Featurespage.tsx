@@ -17,6 +17,7 @@ import {
   Cloud,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function FeaturesPage() {
   const router = useRouter();
@@ -221,7 +222,7 @@ export default function FeaturesPage() {
                 <div className="relative">
                   <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-8 shadow-2xl">
                     <div className="aspect-video bg-gray-800/50 rounded-xl overflow-hidden relative">
-                      <img
+                      <Image
                         width={400}
                         height={400}
                         src={feature.demoImage}
