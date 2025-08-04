@@ -13,18 +13,20 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CanvasPage() {
   const router = useRouter();
+  const [token, settoken] = useState<string | null>("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const yourtoken = localStorage.getItem("token");
     const expireTime = Number(localStorage.getItem("expireTime"));
     if (!token || Date.now() > expireTime) {
       localStorage.removeItem("token");
       localStorage.removeItem("expireTime");
       router.push("/Signin");
+    } else {
+      settoken(yourtoken);
     }
-  }, [router]);
+  }, [router, token]);
 
-  const token = localStorage.getItem("token");
   const [roomname, setroomname] = useState("");
   const [slug, setslug] = useState("");
 
