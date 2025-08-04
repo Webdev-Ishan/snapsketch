@@ -13,11 +13,17 @@ app.use(
   cors({
     origin: "https://snapsketch.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Accept",
+      "X-Requested-With"
+    ],
     credentials: true,
     optionsSuccessStatus: 204,
   })
 );
+app.options("*", cors()); // Handle preflight requests
 
 app.use("/api/auth", authRouter);
 

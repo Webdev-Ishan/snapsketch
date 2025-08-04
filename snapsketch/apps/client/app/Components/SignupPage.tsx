@@ -54,12 +54,7 @@ export default function SignupPage() {
     try {
       const response = await axios.post<backendresponse>(
         `${URL}/api/auth/signup`,
-        formdata,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Explicitly set Content-Type
-          },
-        }
+        formdata
       );
 
       if (response.data && response.data.success) {
