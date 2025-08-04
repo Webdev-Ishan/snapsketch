@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Mail, Lock, ArrowRight, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -14,7 +14,13 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 export default function GiveReviewPage() {
   const router = useRouter();
 
-  const token = localStorage.getItem("token");
+  const [token, settoken] = useState<string | null>(null);
+
+  useEffect(() => {
+    const yourtoken = localStorage.getItem("token");
+    settoken(yourtoken);
+  }, [token]);
+  
   const [Title, setTitle] = useState("");
   const [message, setmessage] = useState("");
 

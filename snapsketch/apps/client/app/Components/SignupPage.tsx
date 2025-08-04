@@ -22,8 +22,8 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SignupPage() {
   const router = useRouter();
-  const [token,settoken]=useState<string | null>(null);
-  
+  const token: string | null = null;
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const expireTime = Number(localStorage.getItem("expireTime"));
@@ -34,7 +34,6 @@ export default function SignupPage() {
       router.push("/Profile");
     }
   }, [token, router]);
-
 
   const [username, setusername] = useState("");
   const [email, setemail] = useState("");

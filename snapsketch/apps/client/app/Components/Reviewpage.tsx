@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 type review = {
   id: string;
@@ -80,7 +81,7 @@ export default function ReviewsPage() {
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <img
+                      <Image
                         src={review.sender.profilepic}
                         alt={review.sender.name}
                         className="w-12 h-12 rounded-full o border-2 border-purple-500/50"

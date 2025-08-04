@@ -30,15 +30,16 @@ const URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const token = localStorage.getItem("token");
+  const [token, settoken] = useState<string | null>(null);
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const yourtoken = localStorage.getItem("token");
     const expireTime = Number(localStorage.getItem("expireTime"));
     if (!token || Date.now() > expireTime) {
       localStorage.removeItem("token");
       localStorage.removeItem("expireTime");
       router.push("/Signin");
     } else {
+      settoken(yourtoken);
       fetchProfile(token);
     }
   }, [token, router]);

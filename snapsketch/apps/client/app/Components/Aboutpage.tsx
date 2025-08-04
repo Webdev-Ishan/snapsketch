@@ -10,6 +10,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function AboutPage() {
   const stats = [
@@ -280,7 +281,7 @@ export default function AboutPage() {
                 className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 text-center hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
               >
                 <div className="relative mb-6">
-                  <img
+                  <Image
                     src={member.image}
                     alt={member.name}
                     className="w-24 h-24 rounded-full mx-auto object-cover border-2 border-purple-500/50"

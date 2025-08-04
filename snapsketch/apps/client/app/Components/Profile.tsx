@@ -4,6 +4,7 @@ import { Mail, Edit3, Plus, Crown, LogOut, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 const URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -39,8 +40,10 @@ export default function ProfilePage() {
   const [loading, setloading] = useState(true);
   const [error, seterror] = useState("");
 
+  const [token, settoken] = useState<string | null>(null);
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const yourtoken = localStorage.getItem("token");
     const expireTime = Number(localStorage.getItem("expireTime"));
 
     if (!token || Date.now() > expireTime) {
@@ -48,9 +51,10 @@ export default function ProfilePage() {
       localStorage.removeItem("expireTime");
       router.push("/Signin");
     } else {
+      settoken(yourtoken);
       fetchProfile(token);
     }
-  }, [router]);
+  }, [router,token]);
 
   const fetchProfile = async (token: string) => {
     try {
@@ -112,8 +116,6 @@ export default function ProfilePage() {
     );
   }
 
-  const token = localStorage.getItem("token");
-
   const handledelete = async (roomid: string) => {
     try {
       const response = await axios.delete<backendresponse2>(
@@ -163,7 +165,7 @@ export default function ProfilePage() {
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-8">
               {/* DP */}
               <div className="relative">
-                <img
+                <Image
                   src={dp}
                   alt={name}
                   className="w-32 h-32 rounded-2xl object-cover border-4 border-purple-500/50 shadow-2xl"
