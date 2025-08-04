@@ -1,4 +1,3 @@
-import { X } from "lucide-react";
 import {
   convertServerShapeToClient,
   creatCircle,
@@ -7,7 +6,7 @@ import {
   createTriangle,
   creatRectangle,
 } from "../helpers/ws.helper";
-
+import { drawAllShapes } from "./drawallshapes";
 type Shapes =
   | {
       type: "Rectangle";
@@ -47,14 +46,17 @@ type Shapes =
 
 let socket: WebSocket | null = null;
 const URL = process.env.NEXT_PUBLIC_WS_URL!;
+export const allShapes: Shapes[] = [];
 
 export function initDraw(
   canvas: HTMLCanvasElement,
   shape: () => string,
   token: string,
-  roomID: string
+  roomID: string,
+  zoom:number
 ) {
-  const allShapes: Shapes[] = [];
+  
+
   const ctx = canvas.getContext("2d");
   if (!ctx) {
     console.error("❌ Cannot get canvas 2D context");
@@ -83,12 +85,12 @@ export function initDraw(
       data.shapes.forEach((shape: Shapes) => {
         allShapes.push(convertServerShapeToClient(shape));
       });
-      drawAllShapes(ctx, canvas, allShapes);
+      drawAllShapes(ctx, canvas, allShapes,zoom);
     }
 
     if (data.type === "create") {
       allShapes.push(convertServerShapeToClient(data.message));
-      drawAllShapes(ctx, canvas, allShapes);
+      drawAllShapes(ctx, canvas, allShapes,zoom);
     }
   };
 
@@ -191,7 +193,7 @@ export function initDraw(
     const width = currX - startX;
     const height = currY - startY;
 
-    drawAllShapes(ctx, canvas, allShapes); // Clear and redraw everything
+    drawAllShapes(ctx, canvas, allShapes,zoom); // Clear and redraw everything
 
     ctx.strokeStyle = "blue";
     ctx.beginPath();
@@ -226,46 +228,4 @@ export function initDraw(
       ctx.stroke();
     }
   });
-
-  function drawAllShapes(
-    ctx: CanvasRenderingContext2D,
-    canvas: HTMLCanvasElement,
-    shapes: Shapes[]
-  ) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    shapes.forEach((shape) => {
-      ctx.beginPath();
-      ctx.strokeStyle = "blue";
-
-      if (shape.type === "Rectangle") {
-        ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-      } else if (shape.type === "Circle") {
-        ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
-        ctx.stroke();
-      } else if (shape.type === "Text") {
-        ctx.font = "30px Arial";
-        ctx.fillStyle = "blue";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(shape.message, shape.x, shape.y);
-      } else if (shape.type === "Line") {
-        ctx.strokeStyle = "blue";
-        ctx.lineWidth = 2;
-
-        // Draw the line
-        ctx.beginPath();
-        ctx.moveTo(shape.x, shape.y); // Start point
-        ctx.lineTo(shape.width, shape.height); // End point
-        ctx.stroke();
-      } else if (shape.type === "Triangle") {
-        ctx.beginPath(); // Start a new path
-        ctx.moveTo(shape.x, shape.y); // Move to the first vertex
-        ctx.lineTo(shape.x2, shape.y2); // Draw a line to the second vertex
-        ctx.lineTo(shape.width, shape.height); // Draw a line to the third vertex
-        ctx.closePath(); // Close the path (draws a line back to the starting point)
-        ctx.stroke();
-      }
-    });
-  }
 }
